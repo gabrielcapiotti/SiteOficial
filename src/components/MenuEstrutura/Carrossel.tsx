@@ -17,7 +17,6 @@ export const BoxCarrossel = styled.main`
 const CustomCarousel = styled(Carousel)`
   width: calc(100% - 150px);
   height: 100%;
-
   .carousel-control-prev, .carousel-control-next {
     width: 100px;
     height: 100%;
@@ -30,48 +29,41 @@ const CustomCarousel = styled(Carousel)`
     justify-content: center;
     position: absolute;
     &:hover {
-        background-color:  ${(props) => props.theme.colors.primary};
+        background-color: ${(props) => props.theme.colors.primary};
         color: black;
         transition: 0.3s ease;
     }
   }
-
   .carousel-control-prev {
     left: 0px;
   }
-
   .carousel-control-next {
     right: 0px;
   }
-
   .carousel-control-prev-icon, .carousel-control-next-icon {
     display: none;
   }
-
   .carousel-item {
     display: none;
   }
-
   .carousel-item.active {
     display: flex;
     justify-content: start;
     align-items: start;
     height: 100%;
   }
-
   img {
     width: 100%;
     height: 300px;
     object-fit: cover;
   }
-
   .carousel-indicators {
     bottom: -35px;
   }
 `;
 
-const PrevIcon = () => <span style={{ fontSize: '24px' }}>&lt;</span>;
-const NextIcon = () => <span style={{ fontSize: '24px' }}>&gt;</span>;
+const PrevIcon = () => <p style={{ fontSize: '24px' }}>Anterior</p>;
+const NextIcon = () => <p style={{ fontSize: '24px' }}>Próximo</p>;
 
 export const BoxText = styled.div`
   background-color: #4b4b4b;
@@ -82,11 +74,12 @@ export const BoxText = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  text-align: center;
+  text-align: start;
   color: white;
   padding: 10px;
   padding-right: 100px;
   font-size: 16px;
+  font-size: 18px;
 `;
 
 const ThumbnailBar = styled.div`
@@ -94,55 +87,117 @@ const ThumbnailBar = styled.div`
   overflow-x: auto;
   width: 100%;
   margin-bottom: 10px; // Space between thumbnails and text
+  padding-left: 100px;
 `;
 
 const Thumbnail = styled.img`
-  width: 100px;
-  height: 50px;
+  width: 98px;
+  height: 60px;
   margin-right: 10px;
   cursor: pointer;
   object-fit: cover;
   &:hover {
-    border: 1px solid #fff;
+    border: 0px solid #fff;
   }
 `;
 
 const ImageCarousel = () => {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [tempSrc, setTempSrc] = useState(null); // State for temporarily displaying thumbnail images
+
   const slides = [
-    { src: "src/assets/images/Elden Ring Wallpaper.jpg", alt: "First Slide", caption: "Explore the mystical world of Elden Ring." },
-    { src: "src/assets/images/download.jfif", alt: "Second Slide", caption: "Discover new adventures and challenges." },
-    { src: "src/assets/images/Elden Ring Wallpaper.jpg", alt: "Third Slide", caption: "Face your fate in this epic saga." },
-    { src: "src/assets/images/download.jfif", alt: "Second Slide", caption: "Discover new adventures and challenges." },
+    {
+      src: "src/assets/images/Elden Ring Wallpaper.jpg",
+      alt: "First Slide",
+      captions: {
+        primary: "Elden Ring",
+        secondary: "Explore the mystical world of Elden Ring."
+      },
+      thumbnails: [
+        "src/assets/images/Marika (1).jpg",
+        "src/assets/images/Marika (2).jpg",
+        "src/assets/images/Marika (3).jpg",
+        "src/assets/images/Marika (4).jpg"
+      ]
+    },
+    {
+      src: "src/assets/images/DarkSoulsIII.jpg",
+      alt: "Second Slide",
+      captions: {
+        primary: "Dark Souls III",
+        secondary: "Discover new adventures and challenges."
+      },
+      thumbnails: [
+        "src/assets/images/DarkSoulsIIIarts (1).jpg",
+        "src/assets/images/DarkSoulsIIIarts (2).jpg",
+        "src/assets/images/DarkSoulsIIIarts (3).jpg",
+        "src/assets/images/DarkSoulsIIIarts.jpg"
+      ]
+    },
+    {
+      src: "src/assets/images/Baldur's Gate 3.jpg",
+      alt: "Third Slide",
+      captions: {
+        primary: "Baldur's Gate III",
+        secondary: "Face your fate in this epic saga."
+      },
+      thumbnails: [
+        "src/assets/images/Baldurs (1).jpg",
+        "src/assets/images/Baldurs (2).jpg",
+        "src/assets/images/Baldurs (3).jpg",
+        "src/assets/images/Baldurs (4).jpg",
+      ]
+    },
+    {
+      src: "src/assets/images/TheWitcher3.jpg",
+      alt: "Fourth Slide",
+      captions: {
+        primary: "The Witcher 3",
+        secondary: "Journey through the vast world of The Witcher."
+      },
+      thumbnails: [
+        "src/assets/images/Witcher3 (1).jpg",
+        "src/assets/images/Witcher3 (2).jpg",
+        "src/assets/images/Witcher3 (3).jpg",
+        "src/assets/images/Witcher3 (4).jpg",
+      ]
+    },
   ];
+
+
+  const handleThumbnailMouseEnter = (src) => {
+    setTempSrc(src);
+  };
+
+  const handleThumbnailMouseLeave = () => {
+    setTempSrc(null);
+  };
 
   return (
     <BoxCarrossel>
-      <CustomCarousel prevIcon={<PrevIcon />} nextIcon={<NextIcon />} activeIndex={activeIndex} onSelect={(selectedIndex) => setActiveIndex(selectedIndex)}>
+      <CustomCarousel activeIndex={activeIndex} onSelect={(selectedIndex) => setActiveIndex(selectedIndex)}>
         {slides.map((slide, index) => (
           <Carousel.Item key={index}>
-            <img src={slide.src} alt={slide.alt} />
+            <img src={index === activeIndex ? (tempSrc || slide.src) : slide.src} alt={slide.alt} />
           </Carousel.Item>
         ))}
       </CustomCarousel>
       <BoxText>
         <div>
-          {slides[activeIndex].caption}
+          <h1>{slides[activeIndex]?.captions?.primary}</h1>
+          <p>{slides[activeIndex]?.captions?.secondary}</p>
         </div>
         <ThumbnailBar>
-          {slides.map((slide, index) => (
-            <Thumbnail key={index} src={slide.src} alt={slide.alt} onClick={() => setActiveIndex(index)} />
+          {slides[activeIndex]?.thumbnails?.map((thumb, index) => (
+            <Thumbnail key={index} src={thumb} alt={`Thumbnail ${index}`}
+              onMouseEnter={() => handleThumbnailMouseEnter(thumb)}
+              onMouseLeave={handleThumbnailMouseLeave}
+            />
           ))}
         </ThumbnailBar>
-        <div>
-          {slides[activeIndex].caption}
-        </div>
-        <div>
-          {slides[activeIndex].caption}
-        </div>
       </BoxText>
     </BoxCarrossel>
   );
-};
+}
 
 export default ImageCarousel;
